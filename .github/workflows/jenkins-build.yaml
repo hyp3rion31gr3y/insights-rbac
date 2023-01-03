@@ -1,0 +1,24 @@
+name: Jenkins PR check for opened PR's
+
+on:
+  pull_request:
+    branches: [master,main]
+    types: [opened]
+
+jobs:
+  run_on_jenkins:
+    name: PR Checker
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger InsightsRBAC_PRbuilder Job
+        uses: toptal/jenkins-job-trigger-action@master
+        with:
+          jenkins_url: "https://master-jenkins-csb-perf.apps.ocp-c1.prod.psi.redhat.com/"
+          jenkins_user: ${{ secrets.JENKINS_USER }}
+          jenkins_token: ${{ secrets.JENKINS_TOKEN }}
+          # proxy: ${{ secrets.JENKINS_PROXY }}
+          job_name: "InsightsRBAC_PRbuilder"
+          job_params: |
+            {
+              "PR_NUMBER": ""
+            }
